@@ -27,3 +27,26 @@
 	}
 
 }
+
+
+.button.alt.ziftrpay-checkout-button {
+	background-color: #574e69;
+	color: #fff;
+	border-radius: 5px;
+
+	&:hover {
+		background-color: #5E5372;
+	}
+
+	img {
+		display: inline;
+		vertical-align: middle;
+		height: 1.5em;
+	}
+}
+
+.button.checkout.wc-forward,
+.checkout-button.button.alt.wc-forward
+{
+	display: none;
+}

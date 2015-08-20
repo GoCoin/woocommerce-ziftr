@@ -1,2 +1,33 @@
-.ziftrpay-banner{overflow:hidden}.ziftrpay-banner img{float:right;padding:15px 0;margin-left:1em;height:120px}.ziftrpay-banner.updated{border-color:#574e69}.woocommerce-checkout #payment ul.payment_methods li.payment_method_ziftrpay{margin-top:5px}.woocommerce-checkout #payment ul.payment_methods li.payment_method_ziftrpay .about_ziftrpay{float:right;font-size:.83em}
-/*# sourceMappingURL=admin.css.map */
+/**
+ * admin.scss
+ */
+.ziftrpay-banner {
+  overflow: hidden; }
+  .ziftrpay-banner img {
+    float: right;
+    padding: 15px 0;
+    margin-left: 1em;
+    height: 120px; }
+  .ziftrpay-banner.updated {
+    border-color: #574e69; }
+
+.woocommerce-checkout #payment ul.payment_methods li.payment_method_ziftrpay {
+  margin-top: 5px; }
+  .woocommerce-checkout #payment ul.payment_methods li.payment_method_ziftrpay .about_ziftrpay {
+    float: right;
+    font-size: .83em; }
+
+.button.alt.ziftrpay-checkout-button {
+  background-color: #574e69;
+  color: #fff;
+  border-radius: 5px; }
+  .button.alt.ziftrpay-checkout-button:hover {
+    background-color: #5E5372; }
+  .button.alt.ziftrpay-checkout-button img {
+    display: inline;
+    vertical-align: middle;
+    height: 1.5em; }
+
+.button.checkout.wc-forward,
+.checkout-button.button.alt.wc-forward {
+  display: none; }

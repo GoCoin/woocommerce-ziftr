@@ -19,6 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 //check if woocommerce is active
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 	if( !class_exists( 'WC_Ziftr' ) ){
+		require('vendor/autoload.php');
+
 		class WC_Ziftr extends WC_Settings_API
 		{
 
@@ -43,6 +45,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 				add_filter( 'woocommerce_payment_gateways', array( $this,'add_ziftrpay' ) );
 
+				wp_register_style( 'wc-ziftr-admin', plugins_url( '/includes/assets/css/admin.css', __FILE__ ) );
+				wp_enqueue_style( 'wc-ziftr-admin' );
 			}
 
 
@@ -94,7 +98,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			public function add_ziftr_checkout_after_reqular_checkout(){
 				if ( $this->show_on_cart ) {
 					$redirecturl = $this->redirect_url();
-					echo '<a href="' . $redirecturl . '" class="checkout-button button alt wc-forward">Checkout using ZiftrPAY</a>';
+					$logo = plugins_url( '/includes/assets/images/button_logo.png', __FILE__ );
+					echo '<a href="' . $redirecturl . '" class="checkout-button ziftrpay-checkout-button button alt"><img src="'.$logo.'" /> Checkout using ZiftrPAY</a>';
 				}
 			}
 
@@ -106,6 +111,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				include('includes/class-wc-gateway-ziftrpay-order.php');
 
  				$configuration = $this->get_configuration();
+
 				$order = WC_Gateway_Ziftrpay_Order::from_cart(WC()->cart, $configuration);
 
 				wp_redirect($order->get_checkout_url());

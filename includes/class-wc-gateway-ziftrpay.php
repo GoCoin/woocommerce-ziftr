@@ -37,9 +37,6 @@ class WC_Ziftrpay_Gateway extends WC_Payment_Gateway
 		if ( ! $this->is_valid_for_use() ) {
 			$this->enabled = 'no';
 		}
-
-		wp_register_style( 'wc-ziftr-admin', plugins_url( '/assets/css/admin.css', __FILE__ ) );
-		wp_enqueue_style( 'wc-ziftr-admin' );
 	}
 
 	/**		
@@ -85,7 +82,7 @@ class WC_Ziftrpay_Gateway extends WC_Payment_Gateway
 	 */
 	public function get_icon() {
 
-		$icon = plugins_url('/assets/images/AC_vs_mc_am_dc_zrc_tc_doge_ltc.png',__FILE__);
+		$icon = plugins_url('/assets/images/AC_vs_mc_zrc_tc_doge_ltc.png',__FILE__);
 		$url  = 'https://www.ziftrpay.com/shoppers/';
 
 		$html .= '<img src="' . esc_attr( $icon ) . '" alt="' . __( 'ZiftrPAY accepts credit card and cryptocurrency', 'woocommerce' ) . '" />';
@@ -133,13 +130,17 @@ class WC_Ziftrpay_Gateway extends WC_Payment_Gateway
 	 * @return array
 	 */
 	public function process_payment( $order_id ) {
-		include_once( 'includes/class-wc-gateway-ziftrpay-order.php' );
+		include_once( 'class-wc-gateway-ziftrpay-order.php' );
 
 		$order          = wc_get_order( $order_id );
 
+		$configuration = $GLOBALS['wc_ziftr']->get_configuration();
+
+		$order = WC_Gateway_Ziftrpay_Order::from_cart(WC()->cart, $configuration);
+
 		return array(
 				'result'   => 'success',
-				'redirect' => $ziftrpay_order->get_checkout_url( $order, $this->sandbox )
+				'redirect' => $order->get_checkout_url()
 			    );
 	}
 
