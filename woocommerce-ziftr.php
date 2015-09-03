@@ -21,7 +21,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 	if( !class_exists( 'WC_Ziftr' ) ){
 		require('vendor/autoload.php');
 
-		class WC_Ziftr extends WC_Settings_API
+		class WC_Ziftr
 		{
 
 			public $plugin_id = "woocommerce_ziftrpay";
@@ -34,14 +34,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				// adding ziftr checkout along with  regular woocommerce checkout
 				add_filter( 'woocommerce_proceed_to_checkout', array( $this,'add_ziftr_checkout_after_reqular_checkout' ) );
 
-				// Define user set variables
-				$this->title               = $this->get_option( 'title' );
-				$this->description         = $this->get_option( 'description' );
-				$this->show_above_checkout = 'yes' === $this->get_option( 'show_above_checkout', 'yes' );
-				$this->show_on_cart        = 'yes' === $this->get_option( 'show_on_cart', 'yes' );
-				$this->sandbox             = 'yes' === $this->get_option( 'api_sandbox', 'no' );
-				$this->publishable_key     = $this->get_option( 'api_publishable_key');
-				$this->private_key         = $this->get_option( 'api_private_key' );
 
 				add_filter( 'woocommerce_payment_gateways', array( $this,'add_ziftrpay' ) );
 
@@ -53,23 +45,50 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			public function get_configuration() {
 				$configuration = new \Ziftr\ApiClient\Configuration();
 
+				$gateway = $this->get_gateway_instance();
+
 				$configuration->load_from_array(array(
-							'host'            => ($this->sandbox ? 'sandbox' : 'api' ) . '.fpa.bz',
+							'host'            => ($gateway->sandbox ? 'sandbox' : 'api' ) . '.fpa.bz',
 							'port'            => 443,
-							'private_key'     => $this->private_key,
-							'publishable_key' => $this->publishable_key
+							'private_key'     => $gateway->private_key,
+							'publishable_key' => $gateway->publishable_key
 							));
 
 				return $configuration;
 			}
 
+			/**
+			 * Include Payment Gateway
+			 */
+			function get_gateway() {
+				$c = 'WC_Ziftrpay_Gateway';
+
+				if ( !class_exists($c) ) {
+					include('includes/class-wc-gateway-ziftrpay.php');
+				}
+
+				return $c;
+			}
+
+			/**
+			 * Gets an instance of the payment gateway
+			 */
+			function get_gateway_instance() {
+				static $i = null;
+
+				if ( !$i ) {
+					$c = $this->get_gateway();
+					$i = new $c();
+				}
+
+				return $i;
+			}
 
 			/**
 			 * Add ZiftrPAY as a gateway
 			 */
 			function add_ziftrpay( $methods ) {
-				include('includes/class-wc-gateway-ziftrpay.php');
-				$methods[] = 'WC_Ziftrpay_Gateway'; 
+				$methods[] = $this->get_gateway(); 
 				return $methods;
 			}
 
@@ -96,7 +115,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			}
 
 			public function add_ziftr_checkout_after_reqular_checkout(){
-				if ( $this->show_on_cart ) {
+				if ( true || $this->get_settings()->show_on_cart ) {
 					$redirecturl = $this->redirect_url();
 					$logo = plugins_url( '/includes/assets/images/button_logo.png', __FILE__ );
 					echo '<a href="' . $redirecturl . '" class="checkout-button ziftrpay-checkout-button button alt"><img src="'.$logo.'" /> Checkout using ZiftrPAY</a>';
