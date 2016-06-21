@@ -48,8 +48,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				$gateway = $this->get_gateway_instance();
 
 				$configuration->load_from_array(array(
-							'host'            => ($gateway->sandbox ? 'sandbox' : 'api' ) . '.fpa.bz',
-							'port'            => 443,
+							'endpoint'        => 'https://' . ($gateway->sandbox ? 'sandbox' : 'api' ) . '.fpa.bz/',
 							'private_key'     => $gateway->private_key,
 							'publishable_key' => $gateway->publishable_key
 							));

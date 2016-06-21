@@ -54,7 +54,9 @@ class WC_Gateway_GoPayWin_Order {
 				     )
 				);
 		} catch ( Exception $e ) {
-			print_r($order->getResponse());
+			wc_add_notice('There was an error at checkout. Please try again later.','error');
+			wp_redirect(WC()->cart->get_cart_url());
+			exit;
 		}
 
 		update_post_meta( $wc_order, '_gopaywin_order_id', $order->getResponse()->order->id );
