@@ -114,7 +114,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			}
 
 			public function add_gopaywin_checkout_after_reqular_checkout(){
-				if ( true || $this->get_settings()->show_on_cart ) {
+				$gateway = $this->get_gateway_instance();
+				if ( $gateway->get_option('enabled') === 'yes' && $gateway->get_option('show_on_cart') === 'yes' ) {
 					$redirecturl = $this->redirect_url();
 					$logo = plugins_url( '/includes/assets/images/button_logo.png', __FILE__ );
 					echo '<a href="' . $redirecturl . '" class="checkout-button gopaywin-checkout-button button alt"><img src="'.$logo.'" /> Checkout using GoPayWin</a>';
