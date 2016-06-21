@@ -1,29 +1,29 @@
 /**
  * admin.scss
  */
-.ziftrpay-banner {
+.gopaywinpay-banner {
   overflow: hidden; }
-  .ziftrpay-banner img {
+  .gopaywinpay-banner img {
     float: right;
     padding: 15px 0;
     margin-left: 1em;
     height: 120px; }
-  .ziftrpay-banner.updated {
+  .gopaywinpay-banner.updated {
     border-color: #574e69; }
 
-.woocommerce-checkout #payment ul.payment_methods li.payment_method_ziftrpay {
+.woocommerce-checkout #payment ul.payment_methods li.payment_method_gopaywinpay {
   margin-top: 5px; }
-  .woocommerce-checkout #payment ul.payment_methods li.payment_method_ziftrpay .about_ziftrpay {
+  .woocommerce-checkout #payment ul.payment_methods li.payment_method_gopaywinpay .about_gopaywinpay {
     float: right;
     font-size: .83em; }
 
-.button.alt.ziftrpay-checkout-button {
+.button.alt.gopaywinpay-checkout-button {
   background-color: #574e69;
   color: #fff;
   border-radius: 5px; }
-  .button.alt.ziftrpay-checkout-button:hover {
+  .button.alt.gopaywinpay-checkout-button:hover {
     background-color: #5E5372; }
-  .button.alt.ziftrpay-checkout-button img {
+  .button.alt.gopaywinpay-checkout-button img {
     display: inline;
     vertical-align: middle;
     height: 1.5em; }

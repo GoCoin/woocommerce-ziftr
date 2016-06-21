@@ -1,23 +1,24 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dfc0779975f01a3c4e49b0654718d4ab",
+    "hash": "6d6343d632e12f8b8e99afe6522dcce0",
+    "content-hash": "96094ae990422d35fa906cbaabaf4d4d",
     "packages": [
         {
-            "name": "ziftr/api-client",
+            "name": "gopaywin/api-client",
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Ziftr/ziftr-api-client-php.git",
-                "reference": "0312afdaca9d5680aed3e9850eefa7a9c54ddc0d"
+                "url": "https://github.com/GoPayWin/api-client-php.git",
+                "reference": "1180cf1ab7e6b4c3d3f6895f2152bfe9f74ecdf8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ziftr/ziftr-api-client-php/zipball/0312afdaca9d5680aed3e9850eefa7a9c54ddc0d",
-                "reference": "0312afdaca9d5680aed3e9850eefa7a9c54ddc0d",
+                "url": "https://api.github.com/repos/GoPayWin/api-client-php/zipball/1180cf1ab7e6b4c3d3f6895f2152bfe9f74ecdf8",
+                "reference": "1180cf1ab7e6b4c3d3f6895f2152bfe9f74ecdf8",
                 "shasum": ""
             },
             "require": {
@@ -26,7 +27,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Ziftr\\": "lib"
+                    "GoPayWin\\": "lib"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -35,27 +36,28 @@
             ],
             "authors": [
                 {
-                    "name": "Ziftr and contributors",
-                    "homepage": "https://github.com/ziftr/fpa-php/contributors"
+                    "name": "GoPayWin and contributors",
+                    "homepage": "https://github.com/gopaywin/api-client-php/contributors"
                 }
             ],
-            "description": "Ziftr API PHP Client Bindings",
-            "homepage": "http://www.ziftr.com/",
+            "description": "GoPayWin API PHP Client Bindings",
+            "homepage": "http://www.gopaywin.com/",
             "keywords": [
                 "api",
+                "creditcard",
                 "cryptocurrency",
                 "ecommerce",
-                "ziftr",
-                "ziftrpay"
+                "gopaywin",
+                "gopaywinpay"
             ],
-            "time": "2015-05-08 18:20:50"
+            "time": "2016-05-23 21:21:51"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "ziftr/api-client": 20
+        "gopaywin/api-client": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

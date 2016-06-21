@@ -7,34 +7,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Creates an order and populates it with the correct data.
  */
-class WC_Gateway_Ziftrpay_Order {
+class WC_Gateway_GoPayWin_Order {
 
-	private $_ziftr_order;
+	private $_gopaywin_order;
 	private $_configuration;
 
 	/**
-	 * Gets or creates a ZiftrPAY order
+	 * Gets or creates a GoPayWinPAY order
 	 * @return string The URL of the cart
 	 */
 	public function get_checkout_url() {
-		$links = $this->_ziftr_order->getLinks('checkout',1);
+		$links = $this->_gopaywin_order->getLinks('checkout',1);
 		return empty($links) ? null : $links[0];
 	}
 
 	static function from_cart( $cart, $configuration ) {
-		$instance = new WC_Gateway_Ziftrpay_Order();
+		$instance = new WC_Gateway_GoPayWin_Order();
 
-		$instance->_configuration = $GLOBALS['wc_ziftr']->get_configuration();
+		$instance->_configuration = $GLOBALS['wc_gopaywin']->get_configuration();
 
 		$wc_order = WC()->checkout()->create_order();
 
-		$existing_zoid = get_post_meta( $wc_order, '_ziftrpay_order_id' );
+		$existing_zoid = get_post_meta( $wc_order, '_gopaywin_order_id' );
 
 		if ( !empty($existing_zoid) ) {
 			// todo: resume existing order
 		}
 
-		$order = new \Ziftr\ApiClient\Request('/orders/', $configuration);
+		$order = new \GoPayWin\ApiClient\Request('/orders/', $configuration);
 
 		$main_url = get_site_url();
 		$success_url = $main_url;
@@ -57,9 +57,9 @@ class WC_Gateway_Ziftrpay_Order {
 			print_r($order->getResponse());
 		}
 
-		update_post_meta( $wc_order, '_ziftrpay_order_id', $order->getResponse()->order->id );
-		update_post_meta( $wc_order, '_payment_method', 'ziftrpay' );
-		update_post_meta( $wc_order, '_payment_method_title', 'ZiftrPAY' );
+		update_post_meta( $wc_order, '_gopaywin_order_id', $order->getResponse()->order->id );
+		update_post_meta( $wc_order, '_payment_method', 'gopaywin' );
+		update_post_meta( $wc_order, '_payment_method_title', 'GoPayWin' );
 
 		$itemsReq = $order->linkRequest('items');
 
@@ -79,7 +79,7 @@ class WC_Gateway_Ziftrpay_Order {
 					     ));
 		}
 
-		$instance->_ziftr_order = $order;
+		$instance->_gopaywin_order = $order;
 		return $instance;
 	}
 }

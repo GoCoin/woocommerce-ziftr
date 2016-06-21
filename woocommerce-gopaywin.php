@@ -1,13 +1,13 @@
 <?php
 /*
- * Plugin Name: Ziftr for WooCommerce
- * Plugin URI: http://www.ziftr.com/
- * Description: Bring Ziftr platform and ziftrPAY functionality to WooCommerce
- * Author: Ziftr and contributors
- * Author URI: http://www.ziftr.com
+ * Plugin Name: GoPayWin for WooCommerce
+ * Plugin URI: http://www.gopaywin.com/
+ * Description: Bring GoPayWin platform and GoPayWin functionality to WooCommerce
+ * Author: GoPayWin and contributors
+ * Author URI: http://www.gopaywin.com
  * Version: 0.1.0
  * 
- * Copyright: © 2014-2015 Ziftr, LLC
+ * Copyright: © 2014-2015 GoPayWin, LLC
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org
  */
@@ -18,32 +18,32 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 //check if woocommerce is active
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-	if( !class_exists( 'WC_Ziftr' ) ){
+	if( !class_exists( 'WC_GoPayWin' ) ){
 		require('vendor/autoload.php');
 
-		class WC_Ziftr
+		class WC_GoPayWin
 		{
 
-			public $plugin_id = "woocommerce_ziftrpay";
+			public $plugin_id = "woocommerce_gopaywin";
 
 			public function __construct()
 			{
 				// this is called before the checkout form submit
 				add_action( 'woocommerce_checkout_before_customer_details',array( $this,'woocommerce_checkout_before_customer_details' ) );
 
-				// adding ziftr checkout along with  regular woocommerce checkout
-				add_filter( 'woocommerce_proceed_to_checkout', array( $this,'add_ziftr_checkout_after_reqular_checkout' ) );
+				// adding gopaywin checkout along with  regular woocommerce checkout
+				add_filter( 'woocommerce_proceed_to_checkout', array( $this,'add_gopaywin_checkout_after_reqular_checkout' ) );
 
 
-				add_filter( 'woocommerce_payment_gateways', array( $this,'add_ziftrpay' ) );
+				add_filter( 'woocommerce_payment_gateways', array( $this,'add_gopaywin' ) );
 
-				wp_register_style( 'wc-ziftr-admin', plugins_url( '/includes/assets/css/admin.css', __FILE__ ) );
-				wp_enqueue_style( 'wc-ziftr-admin' );
+				wp_register_style( 'wc-gopaywin-admin', plugins_url( '/includes/assets/css/admin.css', __FILE__ ) );
+				wp_enqueue_style( 'wc-gopaywin-admin' );
 			}
 
 
 			public function get_configuration() {
-				$configuration = new \Ziftr\ApiClient\Configuration();
+				$configuration = new \GoPayWin\ApiClient\Configuration();
 
 				$gateway = $this->get_gateway_instance();
 
@@ -61,10 +61,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 * Include Payment Gateway
 			 */
 			function get_gateway() {
-				$c = 'WC_Ziftrpay_Gateway';
+				$c = 'WC_GoPayWin_Gateway';
 
 				if ( !class_exists($c) ) {
-					include('includes/class-wc-gateway-ziftrpay.php');
+					include('includes/class-wc-gateway-gopaywin.php');
 				}
 
 				return $c;
@@ -85,9 +85,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			}
 
 			/**
-			 * Add ZiftrPAY as a gateway
+			 * Add GoPayWin as a gateway
 			 */
-			function add_ziftrpay( $methods ) {
+			function add_gopaywin( $methods ) {
 				$methods[] = $this->get_gateway(); 
 				return $methods;
 			}
@@ -101,7 +101,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 					if ( empty( $this->log ) ) {
 						$this->log = new WC_Logger();
 					}
-					$this->log->add( 'ziftrpay', $message );
+					$this->log->add( 'gopaywin', $message );
 				}
 			}
 
@@ -110,15 +110,15 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 **/
 			public function woocommerce_checkout_before_customer_details( $product ){
 				if ( $this->show_above_checkout ) {
-					echo '<div class="woocommerce-info ziftrpay-info">Have a ZiftrPAY account? Use your saved details and skip the line <a href="' . $this->redirect_url() . '">Click here to checkout with ZiftrPAY</a></div>';
+					echo '<div class="woocommerce-info gopaywin-info">Have a GoPayWin account? Use your saved details and skip the line <a href="' . $this->redirect_url() . '">Click here to checkout with GoPayWin</a></div>';
 				}
 			}
 
-			public function add_ziftr_checkout_after_reqular_checkout(){
+			public function add_gopaywin_checkout_after_reqular_checkout(){
 				if ( true || $this->get_settings()->show_on_cart ) {
 					$redirecturl = $this->redirect_url();
 					$logo = plugins_url( '/includes/assets/images/button_logo.png', __FILE__ );
-					echo '<a href="' . $redirecturl . '" class="checkout-button ziftrpay-checkout-button button alt"><img src="'.$logo.'" /> Checkout using ZiftrPAY</a>';
+					echo '<a href="' . $redirecturl . '" class="checkout-button gopaywin-checkout-button button alt"><img src="'.$logo.'" /> Checkout using GoPayWin</a>';
 				}
 			}
 
@@ -127,11 +127,11 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			}
 
 			public function redirect_cart() {
-				include('includes/class-wc-gateway-ziftrpay-order.php');
+				include('includes/class-wc-gateway-gopaywin-order.php');
 
  				$configuration = $this->get_configuration();
 
-				$order = WC_Gateway_Ziftrpay_Order::from_cart(WC()->cart, $configuration);
+				$order = WC_Gateway_GoPayWin_Order::from_cart(WC()->cart, $configuration);
 
 				wp_redirect($order->get_checkout_url());
 				exit;
@@ -142,8 +142,8 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		/**
 		 * instantiating Class
 		 **/
-		$GLOBALS['wc_ziftr'] = new WC_Ziftr();
+		$GLOBALS['wc_gopaywin'] = new WC_GoPayWin();
 		
 
-	}//END if ( !class_exists( WC_Ziftr ) )
+	}//END if ( !class_exists( WC_GoPayWin ) )
 }

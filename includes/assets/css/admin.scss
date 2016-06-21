@@ -2,7 +2,7 @@
  * admin.scss
  */
 
-.ziftrpay-banner {
+.gopaywin-banner {
 	overflow: hidden;
 
 	img {
@@ -17,11 +17,11 @@
 	}
 }
 
-.woocommerce-checkout #payment ul.payment_methods li.payment_method_ziftrpay {
+.woocommerce-checkout #payment ul.payment_methods li.payment_method_gopaywin {
 
 	margin-top: 5px;
 
-	.about_ziftrpay {
+	.about_gopaywin {
 		float: right;
 		font-size: .83em;
 	}
@@ -29,7 +29,7 @@
 }
 
 
-.button.alt.ziftrpay-checkout-button {
+.button.alt.gopaywin-checkout-button {
 	background-color: #574e69;
 	color: #fff;
 	border-radius: 5px;

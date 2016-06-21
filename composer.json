@@ -1,23 +1,23 @@
 {
-  "name": "ziftr/woo-plugin",
-  "description": "ZiftrPAY Woo Commerce Plugin",
+  "name": "gopaywin/woocommerce-gopaywin",
+  "description": "GoPayWin Woo Commerce Plugin",
   "keywords": [
-    "ziftr",
-    "ziftrpay",
+    "gopaywin",
     "ecommerce",
     "cryptocurrency",
+    "blockchain",
     "woo"
   ],
-  "homepage": "http://www.ziftrpay.com/",
+  "homepage": "http://www.gopaywin.com/",
   "license": "MIT",
   "authors": [
     {
-      "name": "Ziftr and contributors",
-      "homepage": "https://github.com/ziftr/woo/contributors"
+      "name": "GoPayWin and contributors",
+      "homepage": "https://github.com/GoPayWin/woocommerce-gopaywin/contributors"
     }
   ],
   "require": {
-    "ziftr/api-client": "dev-master",
+    "gopaywin/api-client": "dev-master",
     "php": ">=5.3"
   }
 }
