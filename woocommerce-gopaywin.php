@@ -16,6 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
+if ( ! defined( 'GOPAYWIN_API_DOMAIN' ) ) {
+  define('GOPAYWIN_API_DOMAIN', 'fpa.bz');
+}
+
+if ( ! defined( 'GOPAYWIN_API_PROTOCOL' ) ) {
+  define('GOPAYWIN_API_PROTOCOL', 'https');
+}
+
 //check if woocommerce is active
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 	if( !class_exists( 'WC_GoPayWin' ) ){
@@ -34,6 +42,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				// adding gopaywin checkout along with  regular woocommerce checkout
 				add_filter( 'woocommerce_proceed_to_checkout', array( $this,'add_gopaywin_checkout_after_reqular_checkout' ) );
 
+				// Add IPC
+				add_action( 'woocommerce_api_wc_gateway_gopaywin', array( $this, 'check_ipn_response' ) );
+
 
 				add_filter( 'woocommerce_payment_gateways', array( $this,'add_gopaywin' ) );
 
@@ -42,16 +53,38 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			}
 
 
+			public function check_ipn_response() {
+
+				if ( $_SERVER['REQUEST_METHOD'] === 'POST' && $body = file_get_contents('php://input') ) {
+					$data = file_get_contents('php://input');
+
+					if ( $data && ($jdata = json_decode($data)) && $jdata->order && $jdata->order->id ) {
+						include('includes/class-wc-gateway-gopaywin-order.php');
+
+						$order = WC_Gateway_GoPayWin_Order::from_gopaywin_id($this->get_gateway_instance(), $jdata->order->id);
+						if ( $order ) {
+							echo json_encode($order);
+							exit;
+						}
+					}
+				}
+
+				wp_die( 'GoPayWin IPN Request Failure', 'GoPayWin IPN', array( 'response' => 500 ) );
+			}
+
 			public function get_configuration() {
 				$configuration = new \GoPayWin\ApiClient\Configuration();
 
 				$gateway = $this->get_gateway_instance();
 
-				$configuration->load_from_array(array(
-							'endpoint'        => 'https://' . ($gateway->sandbox ? 'sandbox' : 'api' ) . '.fpa.bz/',
-							'private_key'     => $gateway->private_key,
-							'publishable_key' => $gateway->publishable_key
-							));
+				$config = array(
+					'endpoint'        => GOPAYWIN_API_PROTOCOL . '://' . ($gateway->sandbox ? 'sandbox' : 'api' ) . '.' . GOPAYWIN_API_DOMAIN . '',
+					'private_key'     => $gateway->private_key,
+					'publishable_key' => $gateway->publishable_key
+				);
+
+				$configuration->load_from_array($config);
+
 
 				return $configuration;
 			}
@@ -115,7 +148,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 			public function add_gopaywin_checkout_after_reqular_checkout(){
 				$gateway = $this->get_gateway_instance();
-				if ( $gateway->get_option('enabled') === 'yes' && $gateway->get_option('show_on_cart') === 'yes' ) {
+
+				// Disabled completely for now since it doens't handle shipping corretcly yet
+				if ( false && $gateway->get_option('enabled') === 'yes' && $gateway->get_option('show_on_cart') === 'yes' ) {
 					$redirecturl = $this->redirect_url();
 					$logo = plugins_url( '/includes/assets/images/button_logo.png', __FILE__ );
 					echo '<a href="' . $redirecturl . '" class="checkout-button gopaywin-checkout-button button alt"><img src="'.$logo.'" /> Checkout using GoPayWin</a>';
@@ -131,7 +166,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
  				$configuration = $this->get_configuration();
 
-				$order = WC_Gateway_GoPayWin_Order::from_cart(WC()->cart, $configuration);
+				$order = WC_Gateway_GoPayWin_Order::from_cart($this->get_gateway_instance(), WC()->cart);
 
 				wp_redirect($order->get_checkout_url());
 				exit;

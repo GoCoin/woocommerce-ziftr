@@ -17,7 +17,8 @@ class WC_GoPayWin_Gateway extends WC_Payment_Gateway
 		$this->method_title       = __( 'GoPayWin', 'woocommerce' );
 		$this->method_description = __( 'GoPayWin works by sending customers to GoPayWin where they can enter their payment information and pay with credit card or blockchain currencies.', 'woocommerce' );
 		$this->supports           = array(
-						'products'
+						'products',
+						'subscriptions'
 					  );
 
 		$this->title               = $this->get_option( 'title' );
@@ -136,12 +137,19 @@ class WC_GoPayWin_Gateway extends WC_Payment_Gateway
 
 		$configuration = $GLOBALS['wc_gopaywin']->get_configuration();
 
-		$order = WC_Gateway_GoPayWin_Order::from_cart(WC()->cart, $configuration);
+		$order = WC_Gateway_GoPayWin_Order::from_cart($this, WC()->cart, $order);
 
-		return array(
+		if ( $order ) {
+			return array(
 				'result'   => 'success',
 				'redirect' => $order->get_checkout_url()
-			    );
+			);
+		} else {
+			return array(
+				'result'  => 'fail',
+				'redirect' => ''
+			);
+		}
 	}
 
 }
