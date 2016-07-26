@@ -89,6 +89,23 @@ class WC_Gateway_GoPayWin_Order {
 			}
 		}
 
+		foreach ( $cart->coupon_discount_amounts as $code => $amount ) {
+
+			try {
+				$itemsReq->post(array(
+						'order_item' => array(
+							'name' => "Coupon: $code",
+							'price' => $amount * -100,
+							'currency_code' => 'USD'
+							)
+					     ));
+			} catch ( Exception $e ) {
+				error_log("GoPayWin Error: " . $e->getMessage());
+				return false;
+			}
+			
+		}
+
 		$instance->_gopaywin_order = $order;
 		return $instance;
 	}
