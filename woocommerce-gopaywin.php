@@ -145,7 +145,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 * Do anything on the before the checkout form
 			 **/
 			public function woocommerce_checkout_before_customer_details( $product ){
-				if ( $this->show_above_checkout ) {
+				if ( isset($this->show_above_checkout) && $this->show_above_checkout ) {
 					echo '<div class="woocommerce-info gopaywin-info">Have a GoPayWin account? Use your saved details and skip the line <a href="' . $this->redirect_url() . '">Click here to checkout with GoPayWin</a></div>';
 				}
 			}
