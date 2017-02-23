@@ -48,6 +48,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
 				add_filter( 'woocommerce_payment_gateways', array( $this,'add_gopaywin' ) );
 
+				add_action( 'wp_enqueue_scripts', array( $this,'enqueue_style' ) );
+			}
+
+			function enqueue_style() {
 				wp_register_style( 'wc-gopaywin-admin', plugins_url( '/includes/assets/css/admin.css', __FILE__ ) );
 				wp_enqueue_style( 'wc-gopaywin-admin' );
 			}
