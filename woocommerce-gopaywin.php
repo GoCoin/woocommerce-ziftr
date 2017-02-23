@@ -6,7 +6,7 @@
  * Author: GoPayWin and contributors
  * Author URI: http://www.gopaywin.com
  * Version: 0.1.0
- * 
+ *
  * Copyright: © 2014-2015 GoPayWin, LLC
  * License: GNU General Public License v3.0
  * License URI: http://www.gnu.org
@@ -55,7 +55,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 				wp_register_style( 'wc-gopaywin-admin', plugins_url( '/includes/assets/css/admin.css', __FILE__ ) );
 				wp_enqueue_style( 'wc-gopaywin-admin' );
 			}
-
 
 			public function check_ipn_response() {
 
@@ -124,7 +123,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 			 * Add GoPayWin as a gateway
 			 */
 			function add_gopaywin( $methods ) {
-				$methods[] = $this->get_gateway(); 
+				$methods[] = $this->get_gateway();
 				return $methods;
 			}
 
@@ -182,7 +181,6 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 		 * instantiating Class
 		 **/
 		$GLOBALS['wc_gopaywin'] = new WC_GoPayWin();
-		
 
 	}//END if ( !class_exists( WC_GoPayWin ) )
 }

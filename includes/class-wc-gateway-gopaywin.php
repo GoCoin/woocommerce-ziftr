@@ -40,40 +40,40 @@ class WC_GoPayWin_Gateway extends WC_Payment_Gateway
 		}
 	}
 
-	/**		
-	 * Admin Panel Options		
-	 * - Options for bits like 'title' and availability on a country-by-country basis		
-	 *		
-	 * @since 1.0.0		
-	 */		
-	public function admin_options() {		
-		if ( $this->is_valid_for_use() ) {		
-			?>		
-				<h3><?php __( 'GoPayWin', 'woocommerce' ); ?></h3>		
+	/**
+	 * Admin Panel Options
+	 * - Options for bits like 'title' and availability on a country-by-country basis
+	 *
+	 * @since 1.0.0
+	 */
+	public function admin_options() {
+		if ( $this->is_valid_for_use() ) {
+			?>
+				<h3><?php __( 'GoPayWin', 'woocommerce' ); ?></h3>
 
-				<?php if ( empty( $this->publishable_key ) && empty( $this->private_key ) ) : ?>		
-				<div class="gopaywin-banner updated">		
-				<img src="<?php echo plugins_url('/assets/images/admin_logo.png',__FILE__); ?>" />		
-				<p class="main"><strong><?php _e( 'Getting started', 'woocommerce' ); ?></strong></p>		
-				<p><?php _e( 'GoPayWin is a platform that enabled you to offer your customers more choice by accepting both credit card and blockchain currencies.', 'woocommerce' ); ?></p>		
+				<?php if ( empty( $this->publishable_key ) && empty( $this->private_key ) ) : ?>
+				<div class="gopaywin-banner updated">
+				<img src="<?php echo plugins_url('/assets/images/admin_logo.png',__FILE__); ?>" />
+				<p class="main"><strong><?php _e( 'Getting started', 'woocommerce' ); ?></strong></p>
+				<p><?php _e( 'GoPayWin is a platform that enabled you to offer your customers more choice by accepting both credit card and blockchain currencies.', 'woocommerce' ); ?></p>
 
-				<p><a href="https://www.gopaywin.com/merchants/register/?utm_source=woocommerce-admin" target="_blank" class="button button-primary"><?php _e( 'Sign up for GoPayWin', 'woocommerce' ); ?></a> <a href="https://www.gopaywin.com/merchants/?utm_source=woocommerce-admin" target="_blank" class="button"><?php _e( 'Learn more', 'woocommerce' ); ?></a></p>		
+				<p><a href="https://www.gopaywin.com/merchants/register/?utm_source=woocommerce-admin" target="_blank" class="button button-primary"><?php _e( 'Sign up for GoPayWin', 'woocommerce' ); ?></a> <a href="https://www.gopaywin.com/merchants/?utm_source=woocommerce-admin" target="_blank" class="button"><?php _e( 'Learn more', 'woocommerce' ); ?></a></p>
 
-				</div>		
-				<?php else : ?>		
-				<p><?php _e( 'GoPayWin is a platform that enabled you to offer your customers more choice by accepting both credit card and blockchain currencies.', 'woocommerce' ); ?></p>		
-				<?php endif; ?>		
-				<table class="form-table">		
-				<?php		
-				$this->generate_settings_html();		
-			?>		
-				</table>			
-				<?php		
-		} else {		
-			?>		
-				<div class="inline error"><p><strong><?php _e( 'Gateway Disabled', 'woocommerce' ); ?></strong>: <?php _e( 'GoPayWin does not support your store currency at this time.', 'woocommerce' ); ?></p></div>		
-				<?php		
-		}		
+				</div>
+				<?php else : ?>
+				<p><?php _e( 'GoPayWin is a platform that enabled you to offer your customers more choice by accepting both credit card and blockchain currencies.', 'woocommerce' ); ?></p>
+				<?php endif; ?>
+				<table class="form-table">
+				<?php
+				$this->generate_settings_html();
+			?>
+				</table>
+				<?php
+		} else {
+			?>
+				<div class="inline error"><p><strong><?php _e( 'Gateway Disabled', 'woocommerce' ); ?></strong>: <?php _e( 'GoPayWin does not support your store currency at this time.', 'woocommerce' ); ?></p></div>
+				<?php
+		}
 	}
 
 	/**

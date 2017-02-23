@@ -103,7 +103,7 @@ class WC_Gateway_GoPayWin_Order {
 				error_log("GoPayWin Error: " . $e->getMessage());
 				return false;
 			}
-			
+
 		}
 
 		$instance->_gopaywin_order = $order;
