@@ -27,7 +27,15 @@ class WC_Gateway_GoPayWin_Order {
 
 		$configuration = $instance->_configuration = $GLOBALS['wc_gopaywin']->get_configuration();
 
-		$instance->_wc_order = $wc_order = ($existing_order ? $existing_order : WC()->checkout()->create_order());
+		$instance->_wc_order = $wc_order = $existing_order;
+
+		if (!isset($existing_order)) {
+			error_log("GoPayWin Error: existing order required.");
+			return false;
+
+			// $wc_order_id = WC()->checkout()->create_order();
+			// $wc_order = wc_get_order($wc_order_id);
+		}
 
 		$existing_zoid = get_post_meta( $wc_order, '_gopaywin_order_id' );
 
