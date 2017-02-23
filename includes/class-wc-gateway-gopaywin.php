@@ -86,7 +86,7 @@ class WC_GoPayWin_Gateway extends WC_Payment_Gateway
 		$icon = plugins_url('/assets/images/AC_vs_mc_zrc_tc_doge_ltc.png',__FILE__);
 		$url  = 'https://www.gopaywin.com/consumers/';
 
-		$html .= '<img src="' . esc_attr( $icon ) . '" alt="' . __( 'GoPayWin accepts credit card and blockchain currencies', 'woocommerce' ) . '" />';
+		$html = '<img src="' . esc_attr( $icon ) . '" alt="' . __( 'GoPayWin accepts credit card and blockchain currencies', 'woocommerce' ) . '" />';
 
 		$html .= sprintf( '<a href="%1$s" class="about_gopaywin" onclick="javascript:window.open(\'%1$s\',\'WIGoPayWin\',\'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, width=400, height=700\'); return false;" title="' . esc_attr__( 'What is GoPayWin?', 'woocommerce' ) . '">' . esc_attr__( 'What is GoPayWin?', 'woocommerce' ) . '</a>', esc_url( $url ) );
 
