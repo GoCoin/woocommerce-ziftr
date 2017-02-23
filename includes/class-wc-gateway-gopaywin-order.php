@@ -49,22 +49,76 @@ class WC_Gateway_GoPayWin_Order {
 		$success_url = $main_url;
 		$failure_url = $main_url;
 
-		try{
-			$d = array(
-				'order' => array(
-					'currency_code' => get_woocommerce_currency(),
-					'is_shipping_required' => ($cart->shipping_total > 0),
-					'shipping_price' => $cart->shipping_total * 100,
-					'seller_data' => array( 'wc_order_id' => $wc_order->id ),
-					'seller_order_success_url' => esc_url_raw( add_query_arg( 'utm_nooverride', '1', $gateway->get_return_url( $wc_order ) ) ),
-					'seller_order_failure_url' => $wc_order->get_cancel_order_url_raw()
+		$gpw_order_items = array();
+
+		foreach ( $cart->cart_contents as $item ) {
+			$gpw_order_item = array(
+				'order_item' => array(
+					'name' => $item['data']->post->post_title,
+					// 'tax' => round($item['line_tax'] * 100),
+					'price' => $item['data']->price * 100,
+					'quantity' => $item['quantity'],
+					'type' => 'product',
 				)
 			);
 
-			$order = $order->post($d);
+			$gpw_order_items[] = $gpw_order_item;
+		}
 
+		foreach ( $cart->coupon_discount_amounts as $code => $amount ) {
+			$gpw_order_item = array(
+				'order_item' => array(
+					'name' => "Coupon: $code",
+					'price' => $amount * -100,
+					'currency_code' => 'USD',
+					'type' => 'product',
+				)
+			);
+			$gpw_order_items[] = $gpw_order_item;
+		}
+
+		$gpw_order = array(
+			'order' => array(
+				'currency_code' => get_woocommerce_currency(),
+				'is_shipping_required' => ($cart->shipping_total > 0),
+				'shipping_price' => $cart->shipping_total * 100,
+				'seller_data' => array( 'wc_order_id' => $wc_order->id ),
+				'seller_order_success_url' => esc_url_raw( add_query_arg( 'utm_nooverride', '1', $gateway->get_return_url( $wc_order ) ) ),
+				'seller_order_failure_url' => $wc_order->get_cancel_order_url_raw(),
+				'items' => $gpw_order_items,
+			)
+		);
+
+		try{
+			$order = $order->post($gpw_order);
 		} catch ( Exception $e ) {
-			error_log("GoPayWin Error: " . $e->getMessage());
+
+			if ($e instanceof \GoPayWin\ApiClient\Exceptions\ValidationException) {
+
+				// $fields = $e->getFields();
+				$fields = isset($e->_body->error->fields) ? $e->_body->error->fields : null;
+
+				error_log("GoPayWin Validation Error: " . json_encode($fields));
+
+				// // Include passed value in error
+				// $message = "";
+				// foreach ($fields as $field => $error) {
+				// 	if (!empty($message)) { $message .= ";"; }
+
+				// 	$field_value = $gpw_order;
+				// 	foreach(explode(".", $field) as $ndx) {
+				// 		$field_value = isset($field_value[$ndx]) ? $field_value[$ndx] : null;
+				// 	}
+				// 	$field_value = isset($field_value) ? "('" . $field_value . "')" : null;
+
+				// 	$message .= "$field: $error $value";
+				// }
+				// error_log("GoPayWin Validation Error: " . $message); // -> GoPayWin Validation Error:
+			}
+			else {
+				error_log("GoPayWin Error: " . $e->getMessage());
+			}
+
 			return false;
 		}
 
@@ -73,46 +127,6 @@ class WC_Gateway_GoPayWin_Order {
 		update_post_meta( $wc_order, '_payment_method_title', 'GoPayWin' );
 
 		$itemsReq = $order->linkRequest('items');
-
-		foreach ( $cart->cart_contents as $item ) {
-
-			$quantity = $item['quantity'];
-			$price    = $item['data']->price;
-			$name     = $item['data']->post->post_title;
-			$tax      = $item['line_tax'];
-
-			try {
-				$itemsReq->post(array(
-						'order_item' => array(
-							'name' => $name,
-							//'tax' => round($tax * 100),
-							'price' => $price * 100,
-							'quantity' => $quantity,
-							'currency_code' => 'USD'
-							)
-					     ));
-			} catch ( Exception $e ) {
-				error_log("GoPayWin Error: " . $e->getMessage());
-				return false;
-			}
-		}
-
-		foreach ( $cart->coupon_discount_amounts as $code => $amount ) {
-
-			try {
-				$itemsReq->post(array(
-						'order_item' => array(
-							'name' => "Coupon: $code",
-							'price' => $amount * -100,
-							'currency_code' => 'USD'
-							)
-					     ));
-			} catch ( Exception $e ) {
-				error_log("GoPayWin Error: " . $e->getMessage());
-				return false;
-			}
-
-		}
 
 		$instance->_gopaywin_order = $order;
 		return $instance;
@@ -158,7 +172,7 @@ class WC_Gateway_GoPayWin_Order {
 			$this->_wc_order->payment_complete( $txn_id );
 			$this->_wc_order->reduce_order_stock();
 		}
-        }
+	}
 
 	protected function payment_on_hold() {
 		if ( $this->_wc_order->has_status( 'on-hold' ) ) {
